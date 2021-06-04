@@ -8,8 +8,10 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
@@ -40,9 +42,14 @@ public class Robot extends TimedRobot {
 
   DifferentialDrive drivetrain = new DifferentialDrive(leftGroup, rightGroup);
 
-  //joystick
+  //joystick 
   Joystick stick = new Joystick(0);
+//length between wheels is 0.59 meters
+  //Pneumatics(basically air compressing 'n stuff) - air compressor which is aided by the pneumatics module
+  private final Compressor comp = new Compressor();
+  private final DoubleSolenoid Solenoid = new doubleSolenoid(0, 1);
 
+  private final Timer m_timer; 
   @Override
   public void robotInit() {}
 
@@ -50,16 +57,25 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {}
 
   @Override
-  public void autonomousInit() {}
+  public void autonomousInit() {
+    m_timer.reset();
+    m_timer.start();
+  }
 
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    
+  }
 
   @Override
   public void teleopInit() {}
 
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    drivetrain.arcadeDrive(stick.getY(), stick.getZ());
+
+    if
+  }
 
   @Override
   public void disabledInit() {}
