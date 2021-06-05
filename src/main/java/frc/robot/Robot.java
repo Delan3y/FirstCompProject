@@ -4,17 +4,20 @@
 
 package frc.robot;
 
-
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
-import edu.wpi.first.math.trajectory.Trajectory;
+import  edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-
+import  edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.SolenoidBase;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
  * each mode, as described in the TimedRobot documentation. If you change the name of this class or
@@ -37,6 +40,12 @@ public class Robot extends TimedRobot {
   private final VictorSP leftMotor1 = new VictorSP(11);
   private final VictorSP leftMotor2 = new VictorSP(12);
 
+//  private final Encoder leftEncoder = new Encoder(4,5);
+// private final Encoder rightEncoder = new Encoder(6,7);
+
+  private final double CountsPerRevolution = 1440;
+  private final double wheelDiameterInchs = 6;
+
   private final SpeedController leftGroup = new SpeedControllerGroup(leftMotor1, leftMotor2);
   private final SpeedController rightGroup = new SpeedControllerGroup(rightMotor1, rightMotor2);
 
@@ -44,12 +53,16 @@ public class Robot extends TimedRobot {
 
   //joystick 
   Joystick stick = new Joystick(0);
+  
+  //xbox controller
+  private final XboxController xbox = new XboxController(1);
 //length between wheels is 0.59 meters
   //Pneumatics(basically air compressing 'n stuff) - air compressor which is aided by the pneumatics module
   private final Compressor comp = new Compressor();
-  private final DoubleSolenoid Solenoid = new doubleSolenoid(0, 1);
+  private final DoubleSolenoid Solenoid = new DoubleSolenoid(0, 1);
+  private final Spark lifter = new Spark(6);
 
-  private final Timer m_timer; 
+ // private final Timer m_timer; 
   @Override
   public void robotInit() {}
 
@@ -58,8 +71,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    m_timer.reset();
-    m_timer.start();
+   // m_timer.reset();
+    //m_timer.start();
   }
 
   @Override
@@ -68,13 +81,27 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void teleopInit() {}
+  public void teleopInit() {
+
+    comp.stop();
+  }
 
   @Override
   public void teleopPeriodic() {
     drivetrain.arcadeDrive(stick.getY(), stick.getZ());
 
-    if
+    if(xbox.getBumper(Hand.kLeft)){ 
+      Solenoid.set(DoubleSolenoid.Value.kForward);// x.kForward means that one side has pressure applied and the other doesn't
+    }
+    else if(xbox.getBumper(Hand.kRight)){
+      Solenoid.set(DoubleSolenoid.Value.kReverse);// Now the other side has pressure and the original one doesn't
+    }
+
+    if(xbox.getAButtonPressed())
+      comp.start();
+    else if(xbox.getBButtonPressed())
+      comp.stop();
+
   }
 
   @Override
