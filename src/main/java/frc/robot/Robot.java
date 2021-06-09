@@ -9,42 +9,45 @@ import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Solenoid;
+//import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
-import  edu.wpi.first.wpilibj.Spark;
+import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.PWMTalonFX;
+//import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import  edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.SolenoidBase;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
+//import edu.wpi.first.wpilibj.Compressor;
+//import edu.wpi.first.wpilibj.SolenoidBase;
+//import edu.wpi.first.wpilibj.DoubleSolenoid;
+
 /**
- * The VM is configured to automatically run this class, and to call the functions corresponding to
- * each mode, as described in the TimedRobot documentation. If you change the name of this class or
- * the package after creating this project, you must also update the build.gradle file in the
+ * The VM is configured to automatically run this class, and to call the
+ * functions corresponding to each mode, as described in the TimedRobot
+ * documentation. If you change the name of this class or the package after
+ * creating this project, you must also update the build.gradle file in the
  * project.n
  */
 public class Robot extends TimedRobot {
   /**
-   * This function is run when the robot is first started up and should be used for any
-   * initialization code.
+   * This function is run when the robot is first started up and should be used
+   * for any initialization code.
    */
 
-
-  //None of these have been configured yet - the num in the parantheses refers to the location on the roboRIO
-        //right motors
-  private final VictorSP rightMotor1 = new VictorSP(2);
-  private final VictorSP rightMotor2 = new VictorSP(3);
+  // None of these have been configured yet - the num in the parantheses refers to
+  // the location on the roboRIO
+  // right motors
+  private final Talon rightMotor1 = new Talon(15);
+  private final Talon rightMotor2 = new Talon(14);
 
         //left motors
-  private final VictorSP leftMotor1 = new VictorSP(11);
-  private final VictorSP leftMotor2 = new VictorSP(12);
+  private final Talon leftMotor1 = new Talon(13);
+  private final Talon leftMotor2 = new Talon(12);
 
 //  private final Encoder leftEncoder = new Encoder(4,5);
 // private final Encoder rightEncoder = new Encoder(6,7);
 
-  private final double CountsPerRevolution = 1440;
-  private final double wheelDiameterInchs = 6;
+ 
 
   private final SpeedController leftGroup = new SpeedControllerGroup(leftMotor1, leftMotor2);
   private final SpeedController rightGroup = new SpeedControllerGroup(rightMotor1, rightMotor2);
@@ -58,9 +61,9 @@ public class Robot extends TimedRobot {
   private final XboxController xbox = new XboxController(1);
 //length between wheels is 0.59 meters
   //Pneumatics(basically air compressing 'n stuff) - air compressor which is aided by the pneumatics module
-  private final Compressor comp = new Compressor();
-  private final DoubleSolenoid Solenoid = new DoubleSolenoid(0, 1);
-  private final Spark lifter = new Spark(6);
+  //private final Compressor comp = new Compressor();
+//  private final DoubleSolenoid Solenoid = new DoubleSolenoid(0, 1);
+ // private final Spark lifter = new Spark(6);
 
  // private final Timer m_timer; 
   @Override
@@ -83,24 +86,24 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
 
-    comp.stop();
+   // comp.stop();
   }
 
   @Override
   public void teleopPeriodic() {
-    drivetrain.arcadeDrive(stick.getY(), stick.getZ());
+    drivetrain.arcadeDrive(0.75*((stick.getY())), 0.75*(stick.getZ()));
 
-    if(xbox.getBumper(Hand.kLeft)){ 
-      Solenoid.set(DoubleSolenoid.Value.kForward);// x.kForward means that one side has pressure applied and the other doesn't
-    }
-    else if(xbox.getBumper(Hand.kRight)){
-      Solenoid.set(DoubleSolenoid.Value.kReverse);// Now the other side has pressure and the original one doesn't
-    }
+    //if(xbox.getBumper(Hand.kLeft)){ 
+   //   Solenoid.set(DoubleSolenoid.Value.kForward);// x.kForward means that one side has pressure applied and the other doesn't
+   // }
+    //else if(xbox.getBumper(Hand.kRight)){
+    //  Solenoid.set(DoubleSolenoid.Value.kReverse);// Now the other side has pressure and the original one doesn't
+    //}
 
-    if(xbox.getAButtonPressed())
+    /**if(xbox.getAButtonPressed())
       comp.start();
     else if(xbox.getBButtonPressed())
-      comp.stop();
+      comp.stop();**/
 
   }
 
